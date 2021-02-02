@@ -1,102 +1,137 @@
-console.log("Hello")
+$(document).ready(function () {
 
-//global variables
-var apiKey = "4e5dbe7db2b5e9c8b47fa40b691443d5"
-var city = "raleigh"
-var currentConditions = "https://api.openweathermap.org/data/2.5/weather?appid="
-var fiveDay =
-  "https://api.openweathermap.org/data/2.5/forecast?4e5dbe7db2b5e9c8b47fa40b691443d5q={city name},{country code}"
-var uvIndex =
-  "https://api.openweathermap.org/data/2.5/uvi?appid={appid}&lat={lat}&lon={lon}"
-var searchedArr = JSON.parse(localStorage.getItem("searchedItems")) || [];
+    var apiKey = `fc5763942c8367963720f177bcb72659`
+
+    function getForecast(lat, long) {
+
+        var queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&appid=${apiKey}`
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function (response) {
+            var response = response
+            console.log(response)
+
+            var today = new Date();
+            var dayOfMonth = today.getDate();
+            var month = today.getMonth() + 1;
+            var year = today.getFullYear();
+            today = "(" + month + "/" + dayOfMonth + "/" + year + ")"
+            var day1 = month + "/" + (dayOfMonth + 1)
+            var day2 = month + "/" + (dayOfMonth + 2)
+            var day3 = month + "/" + (dayOfMonth + 3)
+            var day4 = month + "/" + (dayOfMonth + 4)
+            var day5 = month + "/" + (dayOfMonth + 5)
 
 
-//taking in user input, and passing the value into a variable
-$(document).ready(function() {
-  $("#search-input").on("click", function(event) {
-    var userInput = $("#city-search").val()
-    console.log(userInput)
-    getWeather(userInput)
-  
-  })
-})
+            $(".date1").text("Date: " + day1);
+            var iconCode1 = response.daily[0].weather[0].icon;
+            var iconURL1 = "http://openweathermap.org/img/w/" + iconCode1 + ".png";
+            $('.icon1').attr('src', iconURL1);
+            $(".temp1").text("Temp: " + parseFloat(((response.daily[0].temp.day) - 273.15) * (9 / 5) + 32).toFixed(2) + "°F");
+            $(".hum1").text("Humidity: " + response.current.humidity + "%");
 
-// userInput is passed into the getWeather function as arguement 'cityName'
-function getWeather(cityName) {
-  var apiCall = ""
+            $(".date2").text("Date: " + day2);
+            var iconCode2 = response.daily[1].weather[0].icon;
+            var iconURL2 = "http://openweathermap.org/img/w/" + iconCode2 + ".png";
+            $('.icon2').attr('src', iconURL2);
+            $(".temp2").text("Temp: " + parseFloat(((response.daily[1].temp.day) - 273.15) * (9 / 5) + 32).toFixed(0) + "°F");
+            $(".hum2").text("Humidity: " + response.current.humidity + "%");
 
-  if (cityName !== "") {
-    apiCall = currentConditions + apiKey + "&q=" + cityName
-    //return apiCall;
-  } else {
-    apiCall = currentConditions + apiKey + "&q=" + city
-    //return apiCall;
-  }
+            $(".date3").text("Date: " + day3);
+            var iconCode3 = response.daily[2].weather[0].icon;
+            var iconURL3 = "http://openweathermap.org/img/w/" + iconCode3 + ".png";
+            $('.icon3').attr('src', iconURL3);
+            $(".temp3").text("Temp: " + parseFloat(((response.daily[2].temp.day) - 273.15) * (9 / 5) + 32).toFixed(0) + "°F");
+            $(".hum3").text("Humidity: " + response.current.humidity + "%");
 
-  $.ajax({
-    url: apiCall,
-    method: "GET"
-  }).then(function(response) {
-    console.log(response)
-    var feelslike = response.main.temp
-    feelslike = (feelslike - 273.15) * 1.8 + 32
-    feelslike = Math.floor(feelslike)
-    city = response.name
-    $("#current-weather").append("<div>" + feelslike + "</div>")
-    $("#current-weather").append("<div>" + city + "</div>")
-    fiveDay = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`
+            $(".date4").text("Date: " + day4);
+            var iconCode4 = response.daily[3].weather[0].icon;
+            var iconURL4 = "http://openweathermap.org/img/w/" + iconCode4 + ".png";
+            $('.icon4').attr('src', iconURL4);
+            $(".temp4").text("Temp: " + parseFloat(((response.daily[3].temp.day) - 273.15) * (9 / 5) + 32).toFixed(0) + "°F");
+            $(".hum4").text("Humidity: " + response.current.humidity + "%");
 
-     $.ajax({
-      url: fiveDay,
-      method: "GET"
-    }).then(function(response) {
-      console.log(response)
+            $(".date5").text("Date: " + day5);
+            var iconCode5 = response.daily[4].weather[0].icon;
+            var iconURL5 = "http://openweathermap.org/img/w/" + iconCode5 + ".png";
+            $('.icon5').attr('src', iconURL5);
+            $(".temp5").text("Temp: " + parseFloat(((response.daily[4].temp.day) - 273.15) * (9 / 5) + 32).toFixed(0) + "°F");
+            $(".hum5").text("Humidity: " + response.current.humidity + "%");
 
-      var averageTemp = 0
-      var previousdate = ""
-      var count = 0
-      var results = 0
-      previousdate = moment().format("MM/DD/YYYY")
-      for (let index = 0; index < response.list.length; index++) {
-        var currentDate = moment(response.list[index].dt, "X").format(
-          "MM/DD/YYYY"
-        )
-        var temp = response.list[index].main.temp
-        temp = (temp - 273.15) * 1.8 + 32
-        temp = Math.floor(temp)
-        console.log(currentDate)
-        console.log(temp)
 
-        if (previousdate === currentDate) {
-          averageTemp = averageTemp + temp
-          count++
-          previousdate = currentDate
-        } else {
-          results = averageTemp / count
-          results = Math.floor(results)
-          console.log("results:", results)
-          var card = $("<div class = 'card col-sm-2'>")
-
-          var div1 = $("<div class= 'card-header'>")
-          div1.append("Date" + '' + currentDate)
-          card.append(div1)
-
-          var div2 = $("<div class= 'card-body'>")
-          div2.append("Average Temperature:" + results)
-          card.append(div2)
-
-          $("#five-day").append(card)
-
-          count = 0
-          averageTemp = 0
-          previousdate = currentDate
+        })
+    }
 
 
 
-         
-        }
-      }
+    function getWeather(cityInput) {
+
+        var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${apiKey}`
+
+        $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
+            .then(function (response) {
+
+                var response = response
+
+                console.log(response)
+
+                var temp = (response.main.temp - 273.15) * 1.8 + 32
+
+                $("#temperature").text("Temperature (F): " + temp.toFixed(2) + "°");
+                $("#humidity").text("Humidity: " + response.main.humidity);
+                $("#wind_speed").text("Wind Speed: " + response.wind.speed);
+                $("#city-name").text(response.name)
+                $("#weather-pict").attr("src", response.weather.icon)
+
+                var iconCode = response.weather[0].icon;
+                var iconURL = "http://openweathermap.org/img/w/" + iconCode + ".png";
+                $('#weather-pict').attr('src', iconURL);
+
+
+                var lat = response.coord.lat
+                var long = response.coord.lon
+
+                getUV(lat, long)
+
+                getForecast(lat, long)
+
+            })
+
+    }
+
+    function getUV(lat, long) {
+
+        var queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&appid=${apiKey}`
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function (response) {
+
+            var response = response
+
+            $("#uv_index").text("UV Index: " + response.current.uvi);
+
+        })
+
+    }
+
+    $('#search').on("click", function () {
+
+        var cityInput = $("#city-input").val()
+
+        getWeather(cityInput)
+
+        localStorage.setItem("count", cityInput)
+
+        $("history-btns").prepend("<button>" + cityInput)
+
+
     })
-  })
-}
 
+})
