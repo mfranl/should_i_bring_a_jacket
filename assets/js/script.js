@@ -27,35 +27,35 @@ $(document).ready(function () {
 
             $(".date1").text("Date: " + day1);
             var iconCode1 = response.daily[0].weather[0].icon;
-            var iconURL1 = "http://openweathermap.org/img/w/" + iconCode1 + ".png";
+            var iconURL1 = "https://openweathermap.org/img/w/" + iconCode1 + ".png";
             $('.icon1').attr('src', iconURL1);
             $(".temp1").text("Temp: " + parseFloat(((response.daily[0].temp.day) - 273.15) * (9 / 5) + 32).toFixed(2) + "°F");
             $(".hum1").text("Humidity: " + response.current.humidity + "%");
 
             $(".date2").text("Date: " + day2);
             var iconCode2 = response.daily[1].weather[0].icon;
-            var iconURL2 = "http://openweathermap.org/img/w/" + iconCode2 + ".png";
+            var iconURL2 = "https://openweathermap.org/img/w/" + iconCode2 + ".png";
             $('.icon2').attr('src', iconURL2);
             $(".temp2").text("Temp: " + parseFloat(((response.daily[1].temp.day) - 273.15) * (9 / 5) + 32).toFixed(0) + "°F");
             $(".hum2").text("Humidity: " + response.current.humidity + "%");
 
             $(".date3").text("Date: " + day3);
             var iconCode3 = response.daily[2].weather[0].icon;
-            var iconURL3 = "http://openweathermap.org/img/w/" + iconCode3 + ".png";
+            var iconURL3 = "https://openweathermap.org/img/w/" + iconCode3 + ".png";
             $('.icon3').attr('src', iconURL3);
             $(".temp3").text("Temp: " + parseFloat(((response.daily[2].temp.day) - 273.15) * (9 / 5) + 32).toFixed(0) + "°F");
             $(".hum3").text("Humidity: " + response.current.humidity + "%");
 
             $(".date4").text("Date: " + day4);
             var iconCode4 = response.daily[3].weather[0].icon;
-            var iconURL4 = "http://openweathermap.org/img/w/" + iconCode4 + ".png";
+            var iconURL4 = "https://openweathermap.org/img/w/" + iconCode4 + ".png";
             $('.icon4').attr('src', iconURL4);
             $(".temp4").text("Temp: " + parseFloat(((response.daily[3].temp.day) - 273.15) * (9 / 5) + 32).toFixed(0) + "°F");
             $(".hum4").text("Humidity: " + response.current.humidity + "%");
 
             $(".date5").text("Date: " + day5);
             var iconCode5 = response.daily[4].weather[0].icon;
-            var iconURL5 = "http://openweathermap.org/img/w/" + iconCode5 + ".png";
+            var iconURL5 = "https://openweathermap.org/img/w/" + iconCode5 + ".png";
             $('.icon5').attr('src', iconURL5);
             $(".temp5").text("Temp: " + parseFloat(((response.daily[4].temp.day) - 273.15) * (9 / 5) + 32).toFixed(0) + "°F");
             $(".hum5").text("Humidity: " + response.current.humidity + "%");
@@ -79,8 +79,14 @@ $(document).ready(function () {
                 var response = response
 
                 console.log(response)
+                if (previousSearch.indexOf(cityInput) === -1) {
+
+                
                 previousSearch.push(cityInput)
                 localStorage.setItem("city", JSON.stringify(previousSearch))
+
+                displayLocalStorage();
+                }
                 var temp = (response.main.temp - 273.15) * 1.8 + 32
 
                 $("#temperature").text("Temperature (F): " + temp.toFixed(2) + "°");
@@ -90,7 +96,7 @@ $(document).ready(function () {
                 $("#weather-pict").attr("src", response.weather.icon)
 
                 var iconCode = response.weather[0].icon;
-                var iconURL = "http://openweathermap.org/img/w/" + iconCode + ".png";
+                var iconURL = "https://openweathermap.org/img/w/" + iconCode + ".png";
                 $('#weather-pict').attr('src', iconURL);
 
 
@@ -130,9 +136,23 @@ $(document).ready(function () {
 
         localStorage.setItem("count", cityInput)
 
-        $("history-btns").prepend("<button>" + cityInput)
 
+
+       // $("history-btns").prepend("<button>" + cityInput)
+      
 
     })
 
+
+    function displayLocalStorage () {
+      var previousSearch = JSON.parse(localStorage.getItem("city")) || [];
+      var html = ''
+      for (var i = 0; i < previousSearch.length; i++) {
+        html += `<button>${previousSearch[i]}</button>` 
+      }  
+      console.log(html)
+      $("#history-btn").html(html)
+    }
+    
+    displayLocalStorage();
 })
