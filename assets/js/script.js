@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     var apiKey = `fc5763942c8367963720f177bcb72659`
-
+    var previousSearch = JSON.parse(localStorage.getItem("city"))|| []
     function getForecast(lat, long) {
 
         var queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&appid=${apiKey}`
@@ -12,7 +12,7 @@ $(document).ready(function () {
         }).then(function (response) {
             var response = response
             console.log(response)
-
+            
             var today = new Date();
             var dayOfMonth = today.getDate();
             var month = today.getMonth() + 1;
@@ -79,7 +79,8 @@ $(document).ready(function () {
                 var response = response
 
                 console.log(response)
-
+                previousSearch.push(cityInput)
+                localStorage.setItem("city", JSON.stringify(previousSearch))
                 var temp = (response.main.temp - 273.15) * 1.8 + 32
 
                 $("#temperature").text("Temperature (F): " + temp.toFixed(2) + "°");
@@ -106,7 +107,7 @@ $(document).ready(function () {
 
     function getUV(lat, long) {
 
-        var queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&appid=${apiKey}`
+        var queryURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${long}&appid=${apiKey}`
 
         $.ajax({
             url: queryURL,
@@ -114,8 +115,8 @@ $(document).ready(function () {
         }).then(function (response) {
 
             var response = response
-
-            $("#uv_index").text("UV Index: " + response.current.uvi);
+          console.log(response)
+            $("#uv_index").text("UV Index: " + response.value);
 
         })
 
