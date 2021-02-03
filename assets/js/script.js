@@ -148,11 +148,18 @@ $(document).ready(function () {
       var previousSearch = JSON.parse(localStorage.getItem("city")) || [];
       var html = ''
       for (var i = 0; i < previousSearch.length; i++) {
-        html += `<button>${previousSearch[i]}</button>` 
+        html += `<button class = "btn btn-primary cityName">${previousSearch[i]}</button>` 
       }  
       console.log(html)
       $("#history-btn").html(html)
     }
     
+    $("#history-btn").on("click", ".cityName", function() {
+      var randomName = $(this).text()
+      console.log(randomName)
+      getWeather(randomName);
+    })
+
     displayLocalStorage();
 })
+
