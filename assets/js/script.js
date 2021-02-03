@@ -124,6 +124,7 @@ $(document).ready(function () {
           console.log(response)
             $("#uv_index").text("UV Index: " + response.value);
 
+         
         })
 
     }
@@ -134,7 +135,7 @@ $(document).ready(function () {
 
         getWeather(cityInput)
 
-        localStorage.setItem("count", cityInput)
+        //localStorage.setItem("count", cityInput)
 
 
 
